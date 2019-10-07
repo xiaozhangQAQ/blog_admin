@@ -29,14 +29,14 @@ export default [
     url: '/user/login',
     type: 'post',
     response: config => {
-      const { username } = config.body
-      const token = tokens[username]
+      const { username,password } = config.body;
+      const token = tokens[username];
 
       // mock error
       if (!token) {
         return {
           code: 60204,
-          message: 'Account and password are incorrect.'
+          message: '登录失败，请确认账号密码是否填写正确.'
         }
       }
 
