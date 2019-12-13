@@ -14,6 +14,7 @@ import store from './store'
 import router from './router'
 
 import '@/icons' // icon
+// import '@/icons/aliIcon/iconfont.css'
 import '@/permission' // permission control
 
 import * as filters from './filters' // global filters

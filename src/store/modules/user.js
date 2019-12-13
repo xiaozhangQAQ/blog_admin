@@ -29,34 +29,42 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      // login({ username: username.trim(), password: password }).then(response => {
+      //   const { data } = response
+      //   commit('SET_TOKEN', data.token)
+      //   setToken(data.token)
+      //   resolve()
+      // }).catch(error => {
+      //   reject(error)
+      // })
+      commit('SET_TOKEN', 'sdfsd');
+      setToken('sdfsd');
+      resolve();
     })
   },
 
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
-        if (!data) {
-          reject('Verification failed, please Login again.')
-        }
-        const { name, avatar, user_id } = data
+      // getInfo(state.token).then(response => {
+      //   const { data } = response
+      //   if (!data) {
+      //     reject('Verification failed, please Login again.')
+      //   }
+      //   const { name, avatar, user_id } = data
     
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_USER_ID', user_id)
+      //   commit('SET_NAME', name)
+      //   commit('SET_AVATAR', avatar)
+      //   commit('SET_USER_ID', user_id)
+      //   resolve(data)
+      // }).catch(error => {
+      //   reject(error)
+      // })
+        let data = {name:'editor',avatar:'asdasd',user_id:'asddf1234'}
+        commit('SET_NAME', data.name)
+        commit('SET_AVATAR', data.avatar)
+        commit('SET_USER_ID', data.user_id)
         resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
     })
   },
 
