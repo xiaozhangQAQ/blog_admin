@@ -2,11 +2,12 @@
 <template>
     <div id="editor">
         <mavon-editor style="height: 100%"
-         v-model="article.content"
+         v-model="content"
          ref=md
          @imgAdd="$imgAdd"
          :boxShadow="false"
          defaultOpen="edit"
+         @change="change"
          :toolbars="{
           bold: true, // 粗体
           italic: true, // 斜体
@@ -56,16 +57,17 @@ export default {
     },
     data (){
         return {
-            article:{
-                content: 'ccc',
-                title: '',
-                cover: '',
-                subMessage: '',
-                isEncrypt: '0'
-            }
+            content: '',
+            html:''
         }
     },
     methods:{
+        getInitData(datas){
+           this.content = datas;
+        },
+        change(value, render){
+           this.html = render;
+        },
         $imgAdd(pos, $file) {
             qntoken()
             .then((data) => {

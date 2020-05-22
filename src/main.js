@@ -13,6 +13,8 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+import Highlight from './utils/Highlight'
+
 import '@/icons' // icon
 // import '@/icons/aliIcon/iconfont.css'
 import '@/permission' // permission control
@@ -35,6 +37,8 @@ import * as filters from './filters' // global filters
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
+
+Vue.use(Highlight)
 
 // register global utility filters
 Object.keys(filters).forEach(key => {

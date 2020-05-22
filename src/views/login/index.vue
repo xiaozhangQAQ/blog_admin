@@ -54,6 +54,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import { login } from '@/api/user.js'
 
 export default {
   name: 'Login',
@@ -111,10 +112,15 @@ export default {
       })
     },
     handleLogin() {
+      // login({'user_name':'admin'}).then(res=>{
+      //   console.log(res)
+      // })
+      // return;
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           this.$store.dispatch('user/login', this.loginForm).then(() => {
+            // return;
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch((err) => {          

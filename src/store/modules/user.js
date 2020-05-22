@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -27,19 +27,28 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    const { username, password } = userInfo;
     return new Promise((resolve, reject) => {
-      // login({ username: username.trim(), password: password }).then(response => {
-      //   const { data } = response
+      login({'user_name':username.trim(),'user_password':password}).then(res=>{
+        console.log(res)
+        const { data } = res;
+        commit('SET_TOKEN', data.logintoken)
+        setToken(data.logintoken)
+        resolve()
+      }).catch(error => {
+          reject(error)
+      })
+      // login({ user_name: user_name.trim()}).then(response => {
+      //   const { data } = response;
       //   commit('SET_TOKEN', data.token)
       //   setToken(data.token)
       //   resolve()
       // }).catch(error => {
       //   reject(error)
       // })
-      commit('SET_TOKEN', 'sdfsd');
-      setToken('sdfsd');
-      resolve();
+      // commit('SET_TOKEN', 'sdfsd');
+      // setToken('sdfsd');
+      // resolve();
     })
   },
 

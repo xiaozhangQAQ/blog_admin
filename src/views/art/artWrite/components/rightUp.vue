@@ -35,8 +35,7 @@
       </el-form-item>
       <el-form-item label="分类">
         <el-select v-model="form.region" placeholder="请选择分类">
-          <el-option label="pc" value="pc"></el-option>
-          <el-option label="移动" value="mobile"></el-option>
+          <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
       <!-- <el-form-item label="即时配送">
@@ -44,12 +43,10 @@
       </el-form-item> -->
       <el-form-item label="标签">
         <el-select
-          v-model="value"
+          v-model="form.label"
           multiple
-          filterable
-          allow-create
-          default-first-option
-          placeholder="请选择文章标签">
+          placeholder="请选择文章标签"
+          >
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -73,6 +70,7 @@
 
 import imgCropper from '@/components/ImageCropper/index1.vue'
 import {qntoken} from '@/api/qnToken.js'
+import {articleCate,articleLabel} from '@/api/article'
 
 export default {
   name: 'rightUp',
@@ -81,7 +79,7 @@ export default {
   },
   data() {
       return {   
-        cropper: null,
+      cropper: null,
       newFile: null,
       options: {
         aspectRatio: 1,
@@ -96,24 +94,13 @@ export default {
       form: {
           name: '',
           region: '',
-          date1: '',
-          date2: '',
           delivery: false,
-          type: [],
+          label: [],
           resource: '',
           desc: ''
         },
-        options: [{
-          value: 'HTML',
-          label: 'HTML'
-        }, {
-          value: 'CSS',
-          label: 'CSS'
-        }, {
-          value: 'JavaScript',
-          label: 'JavaScript'
-        }],
-        value: []
+        options: [],
+        options1: []
       };
     },
   computed: {
@@ -121,7 +108,45 @@ export default {
       return this.defaultImg
     }
   },
+  // created(){
+  //   console.log(this.datas)
+  // },
+  mounted(){
+    articleCate().then(res=>{
+      this.options1 = res.data.map((i,e)=>{
+         let objs = {};
+         objs.value = i._id;
+         objs.label = i.name;
+         return objs;
+      })
+    })
+    articleLabel().then(res=>{
+      this.options = res.data.map((i,e)=>{
+         let objs = {};
+         objs.value = i._id;
+         objs.label = i.name;
+         return objs;
+      })
+    })
+  },
    methods: {
+    // typeChange(e){
+    //   console.log(e)
+    // },
+    getInitData(datas){
+      // this.initData = datas;
+      // console.log(datas)
+      this.form.name = datas.article.title;
+      this.form.region = datas.category._id;
+      this.form.desc = datas.article.detail;
+      this.form.label = datas.tags.map((item,index)=>{
+        return item._id;
+      });
+    },
+    // labelChange(e){
+    //    console.log(e)
+    // },
+
      onFileChange (file, fileList) {
       if (file.status === 'ready') {
         const fileType = [
