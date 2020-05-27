@@ -1,7 +1,12 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="add">
+      <el-input v-model="listQuery.title" placeholder="请输入标签名检索" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />  
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        Search
+      </el-button>
+
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="add">
         新增
       </el-button>
     </div> 
@@ -74,7 +79,8 @@ export default {
       listQuery: {
         page: 1,
         pageSize: 10,
-        limit:10
+        limit:10,
+        title:''
       },
       temp:{
         name:''
@@ -105,10 +111,9 @@ export default {
       this.temp.name = row.name;
     },
     createData(){
-      const _this = this;
       articleCateAdd({name:this.temp.name}).then(res=>{
         this.showaDialog = false;
-        _this.reload();
+        this.getList();
       }).catch(err=>{
         this.showaDialog = false;
       })
@@ -116,26 +121,30 @@ export default {
     updateData(){
       articleCateUpdate({_id:this.editId,name:this.temp.name}).then(res=>{
         this.showaDialog = false; 
-        this.reload();
+        this.getList();
       }).catch(err=>{
-        this.showaDialog = false; 
+        this.showaDialog = false;
       })
     },
     deletes(id){
       articleCateDelete({_id:id}).then(res=>{
-        console.log(res);
-        this.reload();
+        this.getList();
+        this.showaDialog = false;
       })
     },
     getList() {
-      this.listLoading = true
+      this.listLoading = true;
       articleCate().then(res => {
         this.list = res.data;
         this.total = 1;
         this.listLoading = false;
+      }) 
+    },
+    handleFilter(){
+      this.listLoading = true;
+      this.getList({title:this.listQuery.title}).then(res=>{
+        this.listLoading = false;
       })
-      // this.list = json.data.list;
-      
     }
   }
 }

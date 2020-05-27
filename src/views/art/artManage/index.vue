@@ -25,11 +25,9 @@
         </template>
       </el-table-column> -->
 
-      <el-table-column class-name="status-col" label="状态">
-        <template slot-scope="{row}">
-          <el-tag :type="row.article.status | statusFilter">
-            {{ row.article.status | statusName }}
-          </el-tag>
+      <el-table-column min-width="140px" label="标题">
+        <template slot-scope="{row}">        
+          <span>{{ row.article.title }}</span>
         </template>
       </el-table-column>
 
@@ -49,23 +47,37 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="300px" label="标题">
+      <el-table-column class-name="status-col" label="状态">
+        <template slot-scope="{row}">       
+            <el-tag :type="row.article.status | statusFilter">
+              {{ row.article.status | statusName }}
+            </el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="状态变化" width="110">
         <template slot-scope="{row}">        
-          <span>{{ row.article.title }}</span>
+          <el-switch
+            :value="row.article.status == '0'?true:false"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            @change = "changeStatus(row.article._id,row.article.status)"
+            >
+          </el-switch>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Actions" width="240">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" icon="el-icon-view" @click="readArticle(scope.row.article._id)">
+          <el-button type="primary" size="mini" icon="el-icon-view" class="act_form" @click="readArticle(scope.row.article._id)">
               预览
           </el-button>
           <router-link :to="'/art/write?_id='+scope.row.article._id">
-            <el-button type="primary" size="mini" icon="el-icon-edit">
+            <el-button type="primary" size="mini" class="act_form" icon="el-icon-edit">
               编辑
             </el-button>
           </router-link>
-          <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteArticle(scope.row.article._id)">
+          <el-button size="mini" type="danger" icon="el-icon-delete" class="act_form" @click="deleteArticle(scope.row.article._id)">
              删除
           </el-button>
         </template>
@@ -105,7 +117,7 @@
 </template>
 
 <script>
-import { articles,deleteArticle } from '@/api/article'
+import { articles,deleteArticle,changeStatus } from '@/api/article'
 // import json from './list.js'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import articleDetail from './articleDetail'
@@ -128,6 +140,13 @@ export default {
       }
       return statusMap[status]
     },
+    statusC(status){
+      const statusMap = {
+        0: true,
+        1: false
+      }
+      return statusMap[status]
+    }
   },
   data() {
     return {
@@ -136,12 +155,13 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        pageSize: 10,
+        pageSize: 20,
         limit:10
       },
       dialogVisible: false,
       deleteDialog:false,
-      deleteId:''
+      deleteId:'',
+      statusType:false
     }
   },
   created() {
@@ -159,19 +179,32 @@ export default {
           message: '删除成功!',
           type: 'success'
         });
-        this.reload();
+        this.getList();
+        this.deleteDialog = false;
       }) 
     },
-    getList() {
-      this.listLoading = true
-      articles({uid:'5ebca743ba6c2d2f2cb5e627'}).then(res => {
+    getList(objs) {
+      this.listLoading = true;
+      if(objs){
+         this.listQuery.page = objs.page;
+         this.listQuery.limit = objs.limit;
+      }
+      articles({uid:'5ebca743ba6c2d2f2cb5e627',page:this.listQuery.page,limit:this.listQuery.limit}).then(res => {
         this.list = res.data.list;
-        this.total = 1;
+        this.total = res.data.total;
         this.listLoading = false;
       })
     },
     readArticle(id){
       this.dialogVisible = true;
+    },
+    changeStatus(id,status){
+      if(status == '0') status = '1';
+      else status = '0';
+      console.log(status)
+      changeStatus({_id:id,status}).then(res=>{
+        this.getList();
+      });
     }
   }
 }
@@ -185,5 +218,8 @@ export default {
   position: absolute;
   right: 15px;
   top: 10px;
+}
+.act_form{
+  margin-bottom: 5px;
 }
 </style>

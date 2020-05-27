@@ -11,6 +11,7 @@ export const articles = (data)=>request.post(`http://127.0.0.1:7001/api/articles
 export const addArticle = (data)=>request.post(`http://127.0.0.1:7001/api/addArticle`,data);
 export const deleteArticle = (data)=>request.post(`http://127.0.0.1:7001/api/deleteArticle`,data);
 export const updateArticle = (data)=>request.post(`http://127.0.0.1:7001/api/updateArticle`,data);
+export const changeStatus = (data)=>request.post(`http://127.0.0.1:7001/api/articleChangeStatus`,data);
 
 export const articleCate = (data)=>request.post(`http://127.0.0.1:7001/api/articleCate`,data);
 export const articleCateAdd = (data)=>request.post(`http://127.0.0.1:7001/api/articleCateAdd`,data);
@@ -18,6 +19,9 @@ export const articleCateUpdate = (data)=>request.post(`http://127.0.0.1:7001/api
 export const articleCateDelete = (data)=>request.post(`http://127.0.0.1:7001/api/articleCateDelete`,data);
 
 export const articleLabel = (data)=>request.post(`http://127.0.0.1:7001/api/articleLabel`,data);
+export const articleLabelAdd = (data)=>request.post(`http://127.0.0.1:7001/api/articleLabelAdd`,data);
+export const articleLabelUpdate = (data)=>request.post(`http://127.0.0.1:7001/api/articleLabelUpdate`,data);
+export const articleLabelDelete = (data)=>request.post(`http://127.0.0.1:7001/api/articleLabelDelete`,data);
 
 // export function fetchArticle(id) {
 //   return request({
