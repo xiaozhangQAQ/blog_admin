@@ -1,5 +1,14 @@
 <template>
   <div class="app-container">
+
+    <div class="filter-container">
+      <el-input v-model="listQuery.stitle" placeholder="请输入名称检索" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />   
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        Search
+      </el-button>
+
+    </div> 
+
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="220">
         <template slot-scope="scope">
@@ -156,7 +165,8 @@ export default {
       listQuery: {
         page: 1,
         pageSize: 20,
-        limit:10
+        limit:10,
+        stitle:''
       },
       dialogVisible: false,
       deleteDialog:false,
@@ -169,6 +179,9 @@ export default {
   },
   inject:['reload'],
   methods: {
+    handleFilter(){
+      this.getList();
+    },
     deleteArticle(id){
       this.deleteDialog = true;
       this.deleteId = id;
@@ -189,7 +202,7 @@ export default {
          this.listQuery.page = objs.page;
          this.listQuery.limit = objs.limit;
       }
-      articles({uid:'5ebca743ba6c2d2f2cb5e627',page:this.listQuery.page,limit:this.listQuery.limit}).then(res => {
+      articles({uid:'5ebca743ba6c2d2f2cb5e627',page:this.listQuery.page,limit:this.listQuery.limit,stitle:this.listQuery.stitle}).then(res => {
         this.list = res.data.list;
         this.total = res.data.total;
         this.listLoading = false;

@@ -1,8 +1,9 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.title" placeholder="请输入标签名检索" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />  
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-input v-model="listQuery.title" placeholder="请输入名称检索" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" /> 
+      <el-input v-model="listQuery.id" placeholder="请输入ID检索" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />  
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         Search
       </el-button>
 
@@ -80,7 +81,8 @@ export default {
         page: 1,
         pageSize: 10,
         limit:10,
-        title:''
+        title:'',
+        id:''
       },
       temp:{
         name:''
@@ -134,7 +136,7 @@ export default {
     },
     getList() {
       this.listLoading = true;
-      articleCate().then(res => {
+      articleCate({searchVal:this.listQuery.title,nid:this.listQuery.id}).then(res => {
         this.list = res.data;
         this.total = 1;
         this.listLoading = false;
@@ -142,9 +144,10 @@ export default {
     },
     handleFilter(){
       this.listLoading = true;
-      this.getList({title:this.listQuery.title}).then(res=>{
-        this.listLoading = false;
-      })
+      this.getList();
+      // getList({searchVal:this.listQuery.title}).then(res=>{
+      //   this.listLoading = false;
+      // })
     }
   }
 }
